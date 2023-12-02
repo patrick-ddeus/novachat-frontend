@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import AuthInput from '../components/AuthInput';
 import Button from '../components/Button';
