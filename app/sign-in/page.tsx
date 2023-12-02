@@ -1,17 +1,23 @@
-"use client"
+'use client';
 import React from 'react';
 import AuthInput from '../components/AuthInput';
 import Button from '../components/Button';
 import Link from 'next/link';
 
+import { FaArrowLeftLong } from 'react-icons/fa6';
+import { useRouter } from 'next/navigation';
+
 const Login: React.FC = () => {
+  const router = useRouter();
   return (
-    
-    <div className="w-full px-7">
+    <div className="w-full px-7 relative">
+      <div onClick={() => router.back()}>
+        <FaArrowLeftLong className="absolute top-[-60px] left-5" />
+      </div>
       <section className="flex justify-center items-center flex-col w-full mt-28">
         <h4 className="text-black font-semibold mb-2">
-          <span className="relative z-[1] after:z-[-1] after:top-3.5 after:right-0 after:absolute after:content-[''] after:w-12 after:h-2 after:bg-[#58c3b7]">
-            Log in 
+          <span className="relative z-[1] after:z-[-1] after:top-3.5 after:right-0 after:absolute after:content-[''] after:w-12 after:h-2 after:bg-[#299286]">
+            Log in
           </span>{' '}
           to Chatbox
         </h4>
@@ -26,7 +32,12 @@ const Login: React.FC = () => {
       </section>
       <div className="mt-20">
         <Button label="Log in" />
-        <Link href="/" className='text-center block text-sm text-[#24786D] mt-2'>Forgot password?</Link>
+        <Link
+          href="/"
+          className="text-center block text-sm text-[#24786D] mt-2"
+        >
+          Forgot password?
+        </Link>
       </div>
     </div>
   );

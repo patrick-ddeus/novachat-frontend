@@ -28,11 +28,11 @@ export default function Home() {
         <Button
           label="Sign up with email"
           isLight={true}
-          onClick={() => router.push('/login')}
+          onClick={() => router.push('/sign-up')}
         />
       </div>
       <Link
-        href="/login"
+        href="/sign-in"
         className="text-[#bebebe] text-center block font-light"
       >
         Existing account? <span className="font-medium">Log in</span>

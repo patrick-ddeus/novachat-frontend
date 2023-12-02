@@ -22,6 +22,6 @@ const Button: React.FC<IButtonProps> = (props) => {
       {label}
     </button>
   );
-};
+}; 
 
 export default Button;
