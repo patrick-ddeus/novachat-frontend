@@ -7,33 +7,57 @@ import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { useForm } from '../../hooks/useForm';
-const passwordForm = z
-  .object({
-    password: z.string(),
-    confirm: z.string(),
-  })
-  .refine((data) => data.password === data.confirm, {
-    message: "Passwords don't match",
-    path: ['confirm'], // path of error
-  });
+
+type Inputs = {
+  username: string | null;
+  email: string | null;
+  password: string | null;
+  confirmPassword: string | null;
+};
+
 const SignUp: React.FC = () => {
-  const {} = useForm({
+  const { errors, handleSubmit, handleChange } = useForm<Inputs>({
     initialValues: {
-      email: '',
-      password: '',
+      username: null,
+      email: null,
+      password: null,
+      confirmPassword: null,
     },
     schema: z
       .object({
-        username: z.string().trim(),
-        email: z.string().email({ message: 'Invalid email address' }).trim(),
-        password: z.string().trim(),
-        confirmPassword: z.string(),
+        username: z
+          .string({
+            required_error: 'Username is required',
+            invalid_type_error: 'Username cant be empty',
+          })
+          .min(1, { message: 'Username must contain at least one character' })
+          .trim(),
+        email: z
+          .string({
+            invalid_type_error: 'Email cant be empty',
+          })
+          .email({ message: 'Invalid email address' })
+          .trim(),
+        password: z
+          .string({
+            required_error: 'Password is required',
+            invalid_type_error: 'Password must be a string',
+          })
+          .min(1, { message: 'Password must contain at least one character' })
+          .trim(),
+        confirmPassword: z.string({
+          required_error: 'Username is required',
+          invalid_type_error: 'Password cant be empty',
+        }),
       })
       .required()
       .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
-        path: ['confirm'], // path of error
+        path: ['confirmPassword'],
       }),
+    onSubmit: (data) => {
+      alert('Enviado');
+    },
   });
 
   const router = useRouter();
@@ -56,14 +80,38 @@ const SignUp: React.FC = () => {
         </p>
       </section>
       <section className="mt-5">
-        <form action="#" className="flex gap-6 flex-col" onSubmit={(e) => {}}>
-          <AuthInput label="Your name" inputType="text" name="username" />
-          <AuthInput label="Your email" inputType="text" name="email" />
-          <AuthInput label="Password" inputType="password" name="password" />
+        <form
+          action="#"
+          className="flex gap-6 flex-col"
+          onSubmit={handleSubmit}
+        >
+          <AuthInput
+            label="Your name"
+            inputType="text"
+            name="username"
+            onChange={(e) => handleChange('username')(e)}
+            error={(errors as Inputs).username}
+          />
+          <AuthInput
+            label="Your email"
+            inputType="text"
+            name="email"
+            onChange={(e) => handleChange('email')(e)}
+            error={(errors as Inputs).email}
+          />
+          <AuthInput
+            label="Password"
+            inputType="password"
+            name="password"
+            onChange={(e) => handleChange('password')(e)}
+            error={(errors as Inputs).password}
+          />
           <AuthInput
             label="Confirm Password"
             inputType="password"
             name="confirmPassword"
+            onChange={(e) => handleChange('confirmPassword')(e)}
+            error={(errors as Inputs).confirmPassword}
           />
           <div className="mt-20">
             <Button label="Create an account" />

@@ -6,12 +6,14 @@ const inter = Inter({ subsets: ['latin'] });
 interface IAuthInputProps {
   label: string;
   inputType: 'text' | 'password';
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
   name?: string;
-  error?: boolean;
+  error?: string | null;
 }
 
 const AuthInput: React.FC<IAuthInputProps> = (props) => {
-  const { label, inputType, name, error = false } = props;
+  const { label, inputType, name, error = false, onChange, value } = props;
   return (
     <div>
       <span
@@ -24,11 +26,15 @@ const AuthInput: React.FC<IAuthInputProps> = (props) => {
       <input
         type={inputType}
         name={name}
-        onChange={(e) => {}}
+        onChange={onChange}
+        value={value}
         className={`transition-colors border-b ${
-          error ? 'border-red-600' : `focus:border-[#24786D] border-gray-400`
+          Boolean(error)
+            ? 'border-red-600'
+            : `focus:border-[#24786D] border-gray-400`
         }  w-full py-2 outline-none`}
       />
+      <span className="text-xs text-red-600 block text-right h-0">{error}</span>
     </div>
   );
 };
