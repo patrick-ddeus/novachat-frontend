@@ -1,13 +1,43 @@
-"use client"
+'use client';
 import React from 'react';
 import AuthInput from '../components/AuthInput';
 import Button from '../components/Button';
 
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
-
+import { z } from 'zod';
+import { useForm } from '../../hooks/useForm';
+const passwordForm = z
+  .object({
+    password: z.string(),
+    confirm: z.string(),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords don't match",
+    path: ['confirm'], // path of error
+  });
 const SignUp: React.FC = () => {
+  const {} = useForm({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    schema: z
+      .object({
+        username: z.string().trim(),
+        email: z.string().email({ message: 'Invalid email address' }).trim(),
+        password: z.string().trim(),
+        confirmPassword: z.string(),
+      })
+      .required()
+      .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ['confirm'], // path of error
+      }),
+  });
+
   const router = useRouter();
+
   return (
     <div className="w-full px-7 relative cursor-pointer">
       <div onClick={() => router.back()}>
@@ -25,19 +55,21 @@ const SignUp: React.FC = () => {
           us
         </p>
       </section>
-      <section className="mt-5 flex gap-6 flex-col">
-        <AuthInput label="Your name" inputType="text" name="name" />
-        <AuthInput label="Your email" inputType="text" name="email" />
-        <AuthInput label="Password" inputType="password" name="password" />
-        <AuthInput
-          label="Confirm Password"
-          inputType="password"
-          name="password"
-        />
+      <section className="mt-5">
+        <form action="#" className="flex gap-6 flex-col" onSubmit={(e) => {}}>
+          <AuthInput label="Your name" inputType="text" name="username" />
+          <AuthInput label="Your email" inputType="text" name="email" />
+          <AuthInput label="Password" inputType="password" name="password" />
+          <AuthInput
+            label="Confirm Password"
+            inputType="password"
+            name="confirmPassword"
+          />
+          <div className="mt-20">
+            <Button label="Create an account" />
+          </div>
+        </form>
       </section>
-      <div className="mt-20">
-        <Button label="Create an account" />
-      </div>
     </div>
   );
 };
