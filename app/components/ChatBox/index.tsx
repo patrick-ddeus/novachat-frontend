@@ -27,7 +27,7 @@ const ChatBox: React.FC = () => {
 
   const fetchMessages = async () => {
     const { data } = await MessagesApi.getMessages(
-      1,
+      2,
       state.userData.token as string
     );
     setMessages(data);
@@ -68,7 +68,7 @@ const ChatBox: React.FC = () => {
         username: userStorageValue.userData.username,
       },
       content: messageInput,
-      channelId: 1,
+      channelId: 2,
       createdAt: Date.now(),
     });
     setMessageInput('');
@@ -95,12 +95,12 @@ const ChatBox: React.FC = () => {
   };
 
   return (
-    <div className="h-[78vh] w-screen bg-white absolute bottom-0 left-0 rounded-t-3xl">
+    <div className="h-[70vh] w-screen bg-white absolute bottom-0 left-0 rounded-t-3xl">
       <Messages messages={messages} userId={userStorageValue.userData.id} />
       <form
         action=""
         onSubmit={(e) => e.preventDefault()}
-        className="absolute bottom-0 border border-t border-[#EEFAF8] p-5 py-3 pb-5 w-full"
+        className="absolute bottom-0 border border-t border-[#EEFAF8] p-5 py-3 pb-5 w-full bg-white"
       >
         <span className="text-xs font-bold inline-block mb-2">
           {userStatus.user} {userStatus.message}

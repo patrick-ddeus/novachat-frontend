@@ -11,12 +11,12 @@ interface IMessageProps {
 }
 
 const Message: React.FC<IMessageProps> = ({ userId, messages }) => {
-
   return (
-    <ul className="p-5 sm:pb-14 max-h-[400px] overflow-auto overflow-x-hidden">
+    <ul className="p-5 pb-16 sm:pb-24 max-h-[400px] overflow-auto overflow-x-hidden">
       {messages.map((message) => (
         <li
           key={message.id}
+          id={`${message.id}`}
           className={`flex gap-2 mt-6 ${
             message.authorId === userId ? 'justify-end' : ''
           }`}
