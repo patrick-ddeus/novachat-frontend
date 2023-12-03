@@ -32,7 +32,11 @@ const Login: React.FC = () => {
     onSubmit: async (data) => {
       try {
         const { data: userData } = await signIn(data.email, data.password);
-        context?.setUserInfo(userData.access_token);
+        context?.setUserInfo(
+          userData.access_token,
+          userData.username,
+          userData.id
+        );
       } catch (err) {
         if (err instanceof AxiosError) alert(err.response?.data.message);
       }
@@ -43,7 +47,7 @@ const Login: React.FC = () => {
 
   if (loading) {
     return (
-      <div className='w-screen h-screen flex flex-col justify-center items-center'>
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
         <LoadingIcon />
       </div>
     );

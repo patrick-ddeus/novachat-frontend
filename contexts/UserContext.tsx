@@ -3,6 +3,8 @@ import useLocalStorage from '../hooks/useLocalStorage';
 
 interface UserData {
   token: string;
+  username: string;
+  id: number;
 }
 
 interface UserState {
@@ -11,7 +13,7 @@ interface UserState {
 
 interface UserContextProps {
   state: UserState;
-  setUserInfo: (token: string) => void;
+  setUserInfo: (token: string, username: string, id: number) => void;
   deleteUserInfo: () => void;
 }
 
@@ -23,6 +25,8 @@ interface UserAction {
 const initialState: UserState = {
   userData: {
     token: '',
+    username: '',
+    id: 0,
   },
 };
 
@@ -31,7 +35,7 @@ const userReducer = (state: UserState, action: UserAction): UserState => {
     case 'SET_USER_INFO':
       return { ...state, userData: action.payload };
     case 'DELETE_USER_INFO':
-      return { ...state, userData: { token: '' } };
+      return { ...state, userData: { token: '', id: 0, username: '' } };
     default:
       return state;
   }
@@ -42,20 +46,23 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export default UserContext;
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(userReducer, initialState);
-
-  const { saveValue, deleteValue } = useLocalStorage<UserState>(
+  const { saveValue, deleteValue, localValue } = useLocalStorage<UserState>(
     'userData',
     initialState
   );
 
-  const setUserInfo = (token: string) => {
-    dispatch({ type: 'SET_USER_INFO', payload: { token } });
-    saveValue('userData', { userData: { token } });
+  const [state, dispatch] = useReducer(userReducer, localValue as UserState);
+
+  const setUserInfo = (token: string, username: string, id: number) => {
+    dispatch({ type: 'SET_USER_INFO', payload: { token, username, id } });
+    saveValue('userData', { userData: { token, username, id } });
   };
 
   const deleteUserInfo = () => {
-    dispatch({ type: 'DELETE_USER_INFO', payload: { token: '' } });
+    dispatch({
+      type: 'SET_USER_INFO',
+      payload: { token: '', id: 0, username: '' },
+    });
     deleteValue('userData');
   };
 

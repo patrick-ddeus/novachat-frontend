@@ -4,6 +4,8 @@ import { AxiosResponse } from 'axios';
 
 export type SignInResponse = {
   access_token: string;
+  username: string;
+  id: number;
 };
 
 function useSignIn() {
