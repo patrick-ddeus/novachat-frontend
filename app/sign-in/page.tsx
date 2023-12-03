@@ -6,10 +6,38 @@ import Link from 'next/link';
 
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
+import { useForm } from '../../hooks/useForm';
+import { SignInSchema } from '../schemas/signInSchema';
+import { AxiosError } from 'axios';
+
+import useSignIn from '../../service/api/useSignIn';
+
+interface Inputs {
+  email: string | null;
+  password: string | null;
+}
 
 const Login: React.FC = () => {
+  const { signIn } = useSignIn();
+
+  const { errors, handleSubmit, handleChange } = useForm<Inputs>({
+    initialValues: {
+      email: null,
+      password: null,
+    },
+    schema: SignInSchema,
+    onSubmit: async (data) => {
+      try {
+        const user = await signIn(data.email, data.password);
+        console.log(user);
+      } catch (err) {
+        if (err instanceof AxiosError) alert(err.response?.data.message);
+      }
+    },
+  });
+
   const router = useRouter();
-  
+
   return (
     <div className="w-full px-7 relative">
       <div onClick={() => router.back()}>
@@ -27,19 +55,33 @@ const Login: React.FC = () => {
           us
         </p>
       </section>
-      <section className="mt-5 flex gap-6 flex-col">
-        <AuthInput label="Your email" inputType="text" name="email" />
-        <AuthInput label="Password" inputType="password" name="password" />
+      <section className="mt-5 ">
+        <form className="flex gap-6 flex-col" onSubmit={handleSubmit}>
+          <AuthInput
+            label="Your email"
+            inputType="text"
+            name="email"
+            error={errors.email}
+            onChange={(e) => handleChange('email')(e)}
+          />
+          <AuthInput
+            label="Password"
+            inputType="password"
+            name="password"
+            error={errors.password}
+            onChange={(e) => handleChange('password')(e)}
+          />
+          <div className="mt-20">
+            <Button label="Log in" />
+            <Link
+              href="/"
+              className="text-center block text-sm text-[#24786D] mt-2"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        </form>
       </section>
-      <div className="mt-20">
-        <Button label="Log in" />
-        <Link
-          href="/"
-          className="text-center block text-sm text-[#24786D] mt-2"
-        >
-          Forgot password?
-        </Link>
-      </div>
     </div>
   );
 };

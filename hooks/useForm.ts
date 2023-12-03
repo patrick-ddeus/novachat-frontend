@@ -14,7 +14,7 @@ export function useForm<T>(options: Options<T>) {
   const handleChange =
     (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      
+
       setData({
         ...data,
         [key]: value,
@@ -26,7 +26,7 @@ export function useForm<T>(options: Options<T>) {
 
     try {
       options.schema.parse(data);
-      console.log(data)
+
       setErrors({});
       if (options?.onSubmit) {
         options.onSubmit(data);
@@ -39,7 +39,7 @@ export function useForm<T>(options: Options<T>) {
             validationErrors[err.path[0]] = err.message;
           }
         });
-        console.log(error.errors);
+
         setErrors(validationErrors);
       }
     }
