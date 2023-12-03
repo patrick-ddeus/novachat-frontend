@@ -1,9 +1,9 @@
 export const metadata = {
-  title: 'Sign Up',
-  description: 'Sign Up to your account',
+  title: 'Home Page',
+  description: 'Welcome to our homepage, connect to people, start a chat',
 };
 
-export default function RootLayout({
+export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode;
