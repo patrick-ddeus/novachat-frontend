@@ -14,20 +14,29 @@ import MessagesApi, {
 } from '../../../service/api/messagesApi';
 
 import DialogArea from './DialogArea';
+import ChannelContext, {
+  ChannelContextProps,
+} from '../../../contexts/ChannelContext';
 
 const socket = io('http://localhost:8082');
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<MessagesResponse[]>([]);
-  const [userStatus, setUserStatus] = useState({ user: '', message: '' });
+  const [userStatus, setUserStatus] = useState({
+    user: '',
+    message: '',
+    channelId: 1,
+  });
   const [messageInput, setMessageInput] = useState('');
 
   const { storageValue, state } = useContext(UserContext) as UserContextProps;
+  const { channel } = useContext(ChannelContext) as ChannelContextProps;
+
   const userStorageValue = storageValue as UserState;
 
   const fetchMessages = async () => {
     const { data } = await MessagesApi.getMessages(
-      2,
+      channel,
       state.userData.token as string
     );
     setMessages(data);
@@ -39,7 +48,7 @@ const ChatBox: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [channel]);
 
   useEffect(() => {
     const handleUserSendingStatus = (data: any) => {
@@ -68,7 +77,7 @@ const ChatBox: React.FC = () => {
         username: userStorageValue.userData.username,
       },
       content: messageInput,
-      channelId: 2,
+      channelId: channel,
       createdAt: Date.now(),
     });
     setMessageInput('');
@@ -82,13 +91,13 @@ const ChatBox: React.FC = () => {
     const user = state.userData.username;
     const typingData =
       value.length > 0
-        ? { user, message: 'is typing!' }
-        : { user: '', message: '' };
+        ? { user, message: 'is typing!', channelId: channel }
+        : { user: '', message: '', channelId: channel };
 
     socket.emit('userSendingStatus', typingData);
 
     if (value.length === 0) {
-      setUserStatus({ user: '', message: '' });
+      setUserStatus({ user: '', message: '', channelId: channel });
     }
 
     setMessageInput(value);
@@ -102,9 +111,12 @@ const ChatBox: React.FC = () => {
         onSubmit={(e) => e.preventDefault()}
         className="absolute bottom-0 border border-t border-[#EEFAF8] p-5 py-3 pb-5 w-full bg-white"
       >
-        <span className="text-xs font-bold inline-block mb-2">
-          {userStatus.user} {userStatus.message}
-        </span>
+        {channel === userStatus.channelId && (
+          <span className="text-xs font-bold inline-block mb-2">
+            {userStatus.user} {userStatus.message}
+          </span>
+        )}
+
         <DialogArea
           value={messageInput}
           onChange={handleChangeOnInputMessage}
