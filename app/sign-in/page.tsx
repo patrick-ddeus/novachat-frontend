@@ -10,7 +10,7 @@ import { useForm } from '../../hooks/useForm';
 import { SignInSchema } from '../schemas/signInSchema';
 import { AxiosError } from 'axios';
 
-import useSignIn from '../../service/api/useSignIn';
+import useSignIn from '../../hooks/api/useSignIn';
 import UserContext from '../../contexts/UserContext';
 import LoadingIcon from '../components/LoadingIcon';
 

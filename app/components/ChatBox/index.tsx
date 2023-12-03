@@ -2,45 +2,38 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { IoSend } from 'react-icons/io5';
 import io from 'socket.io-client';
-import UserContext from '../../../contexts/UserContext';
 
 import Messages from '../Message';
+import UserContext from '../../../contexts/UserContext';
+import MessagesApi, {
+  MessagesResponse,
+} from '../../../service/api/messagesApi';
 
 const socket = io('http://localhost:8082');
 
-export interface Message {
-  id: number;
-  author: string;
-  authorId: number;
-  content: string;
-  channelId: number;
-  createdAt: number;
-}
-
 const ChatBox: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      authorId: 6,
-      channelId: 1,
-      author: 'Robert Abraham',
-      id: 1,
-      content: 'Mensagem enviada por alguém ai',
-      createdAt: Date.now(),
-    },
-    {
-      authorId: 2,
-      channelId: 1,
-      author: 'Patrick Fontes',
-      id: 21,
-      content: 'Mensagem enviada por mim',
-      createdAt: Date.now(),
-    },
-  ]);
+  const [messages, setMessages] = useState<MessagesResponse[]>([]);
   const [userStatus, setUserStatus] = useState({ user: '', message: '' });
   const [messageInput, setMessageInput] = useState('');
 
   const context = useContext(UserContext);
   const userData = JSON.parse(localStorage.getItem('userData') as string);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data } = await MessagesApi.getMessages(
+        1,
+        context?.state.userData.token as string
+      );
+      console.log(data);
+      setMessages(data);
+    };
+    try {
+      fetchMessages();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
     const handleUserSendingStatus = (data: any) => {
@@ -65,7 +58,9 @@ const ChatBox: React.FC = () => {
     const id = context?.state.userData.id;
     socket.emit('messages', {
       authorId: id,
-      author: userData.userData.username,
+      Author: {
+        username: userData.userData.username,
+      },
       content: messageInput,
       channelId: 1,
       createdAt: Date.now(),

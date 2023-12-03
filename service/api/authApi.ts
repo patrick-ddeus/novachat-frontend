@@ -1,5 +1,5 @@
 import apiInstance from './api';
-import { SignInResponse } from './useSignIn';
+import { SignInResponse } from '../../hooks/api/useSignIn';
 
 function signIn(email: string, password: string) {
   return apiInstance.post<SignInResponse>('/users/sign-in', {

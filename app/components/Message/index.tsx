@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import guy from '../../../public/images/guy.png';
-import { Message } from '../ChatBox';
+import { MessagesResponse } from '../../../service/api/messagesApi';
 
 interface IMessageProps {
   userId: number | undefined;
-  messages: Message[];
+  messages: MessagesResponse[];
 }
 
 const Message: React.FC<IMessageProps> = ({ userId, messages }) => (
@@ -25,7 +25,7 @@ const Message: React.FC<IMessageProps> = ({ userId, messages }) => (
         )}
         <div className="flex flex-col gap-2">
           {message.authorId !== userId && (
-            <p className="mt-1 font-medium">{message.author}</p>
+            <p className="mt-1 font-medium">{message.Author.username}</p>
           )}
           <span
             className={`text-[14px] p-3 ${

@@ -1,5 +1,5 @@
-import useAsync from '../../hooks/useAsync';
-import AuthApi from './authApi';
+import useAsync from '../useAsync';
+import AuthApi from '../../service/api/authApi';
 import { AxiosResponse } from 'axios';
 
 export type SignInResponse = {

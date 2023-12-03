@@ -9,7 +9,7 @@ import { useForm } from '../../hooks/useForm';
 import { SignUpSchema } from '../schemas/signUpSchema';
 
 import LoadingIcon from '../components/LoadingIcon';
-import useSignUp from '../../service/api/useSignUp';
+import useSignUp from '../../hooks/api/useSignUp';
 
 import { AxiosError } from 'axios';
 
@@ -40,7 +40,6 @@ const SignUp: React.FC = () => {
       }
     },
   });
-
 
   if (loading) {
     return (
