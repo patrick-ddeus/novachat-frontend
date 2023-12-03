@@ -2,9 +2,20 @@ import apiInstance from './api';
 import { SignInResponse } from './useSignIn';
 
 function signIn(email: string, password: string) {
-  return apiInstance.post<SignInResponse>('/users/sign-in', { email, password });
+  return apiInstance.post<SignInResponse>('/users/sign-in', {
+    email,
+    password,
+  });
 }
 
-const AuthApi = { signIn };
+function signUp(username: string, email: string, password: string) {
+  return apiInstance.post('/users/sign-up', {
+    username,
+    email,
+    password,
+  });
+}
+
+const AuthApi = { signIn, signUp };
 
 export default AuthApi;

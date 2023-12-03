@@ -7,7 +7,7 @@ function useAsync<T, HandlerType extends Function>(
 ) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | AxiosError | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function act(...rest: any[]) {
     setLoading(true);

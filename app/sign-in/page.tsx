@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 
 import useSignIn from '../../service/api/useSignIn';
 import UserContext from '../../contexts/UserContext';
+import LoadingIcon from '../components/LoadingIcon';
 
 interface Inputs {
   email: string | null;
@@ -19,7 +20,7 @@ interface Inputs {
 }
 
 const Login: React.FC = () => {
-  const { signIn } = useSignIn();
+  const { signIn, loading } = useSignIn();
   const context = useContext(UserContext);
 
   const { errors, handleSubmit, handleChange } = useForm<Inputs>({
@@ -39,6 +40,14 @@ const Login: React.FC = () => {
   });
 
   const router = useRouter();
+
+  if (loading) {
+    return (
+      <div className='w-screen h-screen flex flex-col justify-center items-center'>
+        <LoadingIcon />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full px-7 relative">
