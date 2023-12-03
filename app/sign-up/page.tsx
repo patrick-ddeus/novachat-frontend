@@ -8,6 +8,11 @@ import { useRouter } from 'next/navigation';
 import { useForm } from '../../hooks/useForm';
 import { SignUpSchema } from '../schemas/signUpSchema';
 
+import LoadingIcon from '../components/LoadingIcon';
+import useSignUp from '../../service/api/useSignUp';
+
+import { AxiosError } from 'axios';
+
 type Inputs = {
   username: string | null;
   email: string | null;
@@ -16,6 +21,9 @@ type Inputs = {
 };
 
 const SignUp: React.FC = () => {
+  const { signUp, loading } = useSignUp();
+  const router = useRouter();
+
   const { errors, handleSubmit, handleChange } = useForm<Inputs>({
     initialValues: {
       username: null,
@@ -24,13 +32,23 @@ const SignUp: React.FC = () => {
       confirmPassword: null,
     },
     schema: SignUpSchema,
-    onSubmit: (data) => {
-      alert('Enviado');
+    onSubmit: async (data) => {
+      try {
+        await signUp(data.username, data.email, data.password);
+      } catch (err) {
+        if (err instanceof AxiosError) alert(err.response?.data.message);
+      }
     },
   });
 
-  const router = useRouter();
 
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
+        <LoadingIcon />
+      </div>
+    );
+  }
   return (
     <div className="w-full px-7 relative cursor-pointer">
       <div onClick={() => router.back()}>

@@ -2,7 +2,7 @@ import useAsync from '../../hooks/useAsync';
 import AuthApi from './authApi';
 import { AxiosResponse } from 'axios';
 
-function useSignIn() {
+function useSignUp() {
   const {
     data,
     act: signUp,
@@ -20,4 +20,4 @@ function useSignIn() {
   };
 }
 
-export default useSignIn;
+export default useSignUp;
