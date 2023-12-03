@@ -1,13 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import React, { useEffect, useState, useContext } from 'react';
-import { IoSend } from 'react-icons/io5';
 import io from 'socket.io-client';
 
-import Messages from '../Message';
-import UserContext from '../../../contexts/UserContext';
+import Messages from './Message';
+import UserContext, {
+  UserContextProps,
+  UserState,
+} from '../../../contexts/UserContext';
+
 import MessagesApi, {
   MessagesResponse,
 } from '../../../service/api/messagesApi';
+
+import DialogArea from './DialogArea';
 
 const socket = io('http://localhost:8082');
 
@@ -16,18 +22,18 @@ const ChatBox: React.FC = () => {
   const [userStatus, setUserStatus] = useState({ user: '', message: '' });
   const [messageInput, setMessageInput] = useState('');
 
-  const context = useContext(UserContext);
-  const userData = JSON.parse(localStorage.getItem('userData') as string);
+  const { storageValue, state } = useContext(UserContext) as UserContextProps;
+  const userStorageValue = storageValue as UserState;
+
+  const fetchMessages = async () => {
+    const { data } = await MessagesApi.getMessages(
+      1,
+      state.userData.token as string
+    );
+    setMessages(data);
+  };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const { data } = await MessagesApi.getMessages(
-        1,
-        context?.state.userData.token as string
-      );
-      console.log(data);
-      setMessages(data);
-    };
     try {
       fetchMessages();
     } catch (error) {
@@ -37,7 +43,7 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     const handleUserSendingStatus = (data: any) => {
-      const user = context?.state.userData.username;
+      const user = state.userData.username;
       if (user !== data.user) setUserStatus(data);
     };
 
@@ -55,11 +61,11 @@ const ChatBox: React.FC = () => {
   }, [messages, userStatus]);
 
   const sendMessage = () => {
-    const id = context?.state.userData.id;
+    const id = state.userData.id;
     socket.emit('messages', {
       authorId: id,
       Author: {
-        username: userData.userData.username,
+        username: userStorageValue.userData.username,
       },
       content: messageInput,
       channelId: 1,
@@ -73,7 +79,7 @@ const ChatBox: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
-    const user = context?.state.userData.username;
+    const user = state.userData.username;
     const typingData =
       value.length > 0
         ? { user, message: 'is typing!' }
@@ -90,7 +96,7 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="h-[78vh] w-screen bg-white absolute bottom-0 left-0 rounded-t-3xl">
-      <Messages messages={messages} userId={userData.userData.id} />
+      <Messages messages={messages} userId={userStorageValue.userData.id} />
       <form
         action=""
         onSubmit={(e) => e.preventDefault()}
@@ -99,22 +105,12 @@ const ChatBox: React.FC = () => {
         <span className="text-xs font-bold inline-block mb-2">
           {userStatus.user} {userStatus.message}
         </span>
-        <div className="flex">
-          <input
-            type="text"
-            value={messageInput}
-            placeholder="Write your message"
-            onChange={handleChangeOnInputMessage}
-            className="w-full bg-[#F3F6F6] p-5 h-12 rounded-xl placeholder-[#797C7B]"
-          />
-          <button
-            type="button"
-            onClick={() => sendMessage()}
-            className="text-2xl p-3 ml-4 text-white rounded-full flex justify-center items-center bg-[#20A090]"
-          >
-            <IoSend />
-          </button>
-        </div>
+        <DialogArea
+          value={messageInput}
+          onChange={handleChangeOnInputMessage}
+          buttonOnClick={() => sendMessage()}
+          onKeyUp={(event) => event.key === 'Enter' && sendMessage()}
+        />
       </form>
     </div>
   );

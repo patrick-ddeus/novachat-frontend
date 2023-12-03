@@ -1,20 +1,21 @@
 import { createContext, ReactNode, useReducer, useContext } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
-interface UserData {
+export interface UserData {
   token: string;
   username: string;
   id: number;
 }
 
-interface UserState {
+export interface UserState {
   userData: UserData;
 }
 
-interface UserContextProps {
+export interface UserContextProps {
   state: UserState;
   setUserInfo: (token: string, username: string, id: number) => void;
   deleteUserInfo: () => void;
+  storageValue: {} | UserData;
 }
 
 interface UserAction {
@@ -67,7 +68,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ state, setUserInfo, deleteUserInfo }}>
+    <UserContext.Provider
+      value={{ state, setUserInfo, deleteUserInfo, storageValue: localValue }}
+    >
       {children}
     </UserContext.Provider>
   );

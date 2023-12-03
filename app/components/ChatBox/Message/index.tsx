@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import guy from '../../../public/images/guy.png';
-import { MessagesResponse } from '../../../service/api/messagesApi';
+import guy from '../../../../public/images/guy.png';
+import { MessagesResponse } from '../../../../service/api/messagesApi';
 
 interface IMessageProps {
   userId: number | undefined;
@@ -27,7 +27,7 @@ const Message: React.FC<IMessageProps> = ({ userId, messages }) => (
           {message.authorId !== userId && (
             <p className="mt-1 font-medium">{message.Author.username}</p>
           )}
-          <span
+          <span 
             className={`text-[14px] p-3 ${
               message.authorId === userId ? 'bg-[#20A090]' : 'bg-[#F2F7FB]'
             } rounded-xl ${
