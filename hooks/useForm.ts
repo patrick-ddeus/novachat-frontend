@@ -26,7 +26,6 @@ export function useForm<T>(options: Options<T>) {
 
     try {
       options.schema.parse(data);
-
       setErrors({});
       if (options?.onSubmit) {
         options.onSubmit(data);
@@ -39,7 +38,6 @@ export function useForm<T>(options: Options<T>) {
             validationErrors[err.path[0]] = err.message;
           }
         });
-
         setErrors(validationErrors);
       }
     }

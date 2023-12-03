@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { useForm } from '../../hooks/useForm';
-import { SignInSchema } from '../schemas/signInSchema';
+import { SignInSchema } from '../../schemas/signInSchema';
 import { AxiosError } from 'axios';
 
 import useSignIn from '../../hooks/api/useSignIn';

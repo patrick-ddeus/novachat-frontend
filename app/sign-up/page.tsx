@@ -6,7 +6,7 @@ import Button from '../components/Button';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { useForm } from '../../hooks/useForm';
-import { SignUpSchema } from '../schemas/signUpSchema';
+import { SignUpSchema } from '../../schemas/signUpSchema';
 
 import LoadingIcon from '../components/LoadingIcon';
 import useSignUp from '../../hooks/api/useSignUp';
