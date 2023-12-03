@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import AuthInput from '../components/AuthInput';
 import Button from '../components/Button';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import { SignInSchema } from '../schemas/signInSchema';
 import { AxiosError } from 'axios';
 
 import useSignIn from '../../service/api/useSignIn';
+import UserContext from '../../contexts/UserContext';
 
 interface Inputs {
   email: string | null;
@@ -19,6 +20,7 @@ interface Inputs {
 
 const Login: React.FC = () => {
   const { signIn } = useSignIn();
+  const context = useContext(UserContext);
 
   const { errors, handleSubmit, handleChange } = useForm<Inputs>({
     initialValues: {
@@ -28,8 +30,8 @@ const Login: React.FC = () => {
     schema: SignInSchema,
     onSubmit: async (data) => {
       try {
-        const user = await signIn(data.email, data.password);
-        console.log(user);
+        const { data: userData } = await signIn(data.email, data.password);
+        context?.setUserInfo(userData.access_token);
       } catch (err) {
         if (err instanceof AxiosError) alert(err.response?.data.message);
       }

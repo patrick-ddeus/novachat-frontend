@@ -1,13 +1,9 @@
-import type { Metadata } from 'next';
+'use client'
 import { Ubuntu } from 'next/font/google';
 import '@/styles/globals.css';
+import { UserProvider } from '../contexts/UserContext';
 
 const ubuntu = Ubuntu({ weight: '400', subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'Chatbox',
-  description: 'A app to chat with your friends',
-};
 
 export default function RootLayout({
   children,
@@ -16,8 +12,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={ubuntu.className} >
-        {children}
+      <body className={ubuntu.className}>
+        <UserProvider>{children}</UserProvider>
       </body>
     </html>
   );

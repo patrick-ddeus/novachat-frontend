@@ -6,18 +6,18 @@ interface UserData {
 }
 
 interface UserState {
-  userData: UserData | undefined;
+  userData: UserData;
 }
 
 interface UserContextProps {
   state: UserState;
   setUserInfo: (token: string) => void;
-  deleteUserInfo: () => void
+  deleteUserInfo: () => void;
 }
 
 interface UserAction {
   type: 'SET_USER_INFO' | 'DELETE_USER_INFO';
-  payload?: UserData;
+  payload: UserData;
 }
 
 const initialState: UserState = {
@@ -55,7 +55,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteUserInfo = () => {
-    dispatch({ type: 'DELETE_USER_INFO' });
+    dispatch({ type: 'DELETE_USER_INFO', payload: { token: '' } });
     deleteValue('userData');
   };
 

@@ -1,5 +1,6 @@
 import useAsync from '../../hooks/useAsync';
 import AuthApi from './authApi';
+import { AxiosResponse } from 'axios';
 
 export type SignInResponse = {
   access_token: string;
@@ -11,7 +12,10 @@ function useSignIn() {
     act: signIn,
     error,
     loading,
-  } = useAsync<SignInResponse, typeof AuthApi.signIn>(AuthApi.signIn, false);
+  } = useAsync<AxiosResponse<SignInResponse>, typeof AuthApi.signIn>(
+    AuthApi.signIn,
+    false
+  );
   return {
     data,
     signIn,
