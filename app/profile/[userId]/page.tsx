@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import guy from '@/public/images/guy.png';
 import ProfileApi from '@/service/api/profileApi';
 import UserContext, { UserContextProps } from '../../../contexts/UserContext';
+import { FaArrowLeftLong } from 'react-icons/fa6';
 
 interface Inputs {
   username: string;
@@ -29,7 +30,19 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
   const { errors, handleSubmit, handleChange, data } = useForm<Inputs>({
     initialValues: { ...profile },
     schema: EditProfileSchema,
-    onSubmit: async (data) => {},
+    onSubmit: async (data) => {
+      try {
+        await ProfileApi.updateProfile(
+          data.username,
+          data.email,
+          data.aboutMe,
+          params.userId,
+          state.userData.token
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
   });
 
   const router = useRouter();
@@ -62,7 +75,10 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#000E08]">
+    <div className="min-h-screen w-full bg-[#000E08] relative">
+      <div onClick={() => router.back()}>
+        <FaArrowLeftLong className="absolute top-14 left-5 h-3 text-white text-xl" />
+      </div>
       <section className="flex flex-col justify-center items-center pt-16">
         <Image
           src={guy}
@@ -80,7 +96,12 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
             name="username"
             error={errors.username}
             value={profile.username}
-            onChange={(e) => handleChange('username')(e)}
+            onChange={(e) => {
+              handleChange('username')(e);
+              setProfile((prev) => {
+                return { ...prev, [e.target.name]: e.target.value };
+              });
+            }}
           />
 
           <AuthInput
@@ -89,7 +110,12 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
             name="email"
             error={errors.email}
             value={profile.email}
-            onChange={(e) => handleChange('email')(e)}
+            onChange={(e) => {
+              handleChange('email')(e);
+              setProfile((prev) => {
+                return { ...prev, [e.target.name]: e.target.value };
+              });
+            }}
           />
 
           <AuthInput
@@ -98,7 +124,12 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
             name="aboutMe"
             error={errors.aboutMe}
             value={profile.aboutMe}
-            onChange={(e) => handleChange('aboutMe')(e)}
+            onChange={(e) => {
+              handleChange('aboutMe')(e);
+              setProfile((prev) => {
+                return { ...prev, [e.target.name]: e.target.value };
+              });
+            }}
           />
           <div className="mt-10">
             <Button label="Save" />

@@ -25,6 +25,28 @@ function getProfile(userId: string, token: string) {
   });
 }
 
-const ProfileApi = { getProfile };
+function updateProfile(
+  username: string,
+  email: string,
+  aboutMe: string,
+  userId: string,
+  token: string
+) {
+  return apiInstance.patch<ProfileResponse>(
+    `/profile/${userId}`,
+    {
+      username,
+      email,
+      aboutMe,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
+const ProfileApi = { getProfile, updateProfile };
 
 export default ProfileApi;
