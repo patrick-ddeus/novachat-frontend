@@ -17,6 +17,8 @@ import DialogArea from './DialogArea';
 import ChannelContext, {
   ChannelContextProps,
 } from '../../../contexts/ChannelContext';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 const socket = io('http://localhost:8082');
 
@@ -34,21 +36,24 @@ const ChatBox: React.FC = () => {
   const { channel } = useContext(ChannelContext) as ChannelContextProps;
 
   const userStorageValue = storageValue as UserState;
+  const router = useRouter();
 
   const fetchMessages = async () => {
-    const { data } = await MessagesApi.getMessages(
-      channel,
-      state.userData.token as string
-    );
-    setMessages(data);
+    try {
+      const { data } = await MessagesApi.getMessages(
+        channel,
+        state.userData.token as string
+      );
+      setMessages(data);
+    } catch (error) {
+      if (error instanceof AxiosError && error.request.status === '401') {
+        router.push('/');
+      }
+    }
   };
 
   useEffect(() => {
-    try {
-      fetchMessages();
-    } catch (error) {
-      console.log(error);
-    }
+    fetchMessages();
   }, [channel]);
 
   useEffect(() => {

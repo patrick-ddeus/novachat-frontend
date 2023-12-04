@@ -9,10 +9,20 @@ import JustChatting from '@/public/images/chatting.jpg';
 import ChannelContext, {
   ChannelContextProps,
 } from '../../contexts/ChannelContext';
+import UserContext, { UserContextProps } from '../../contexts/UserContext';
+import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 const Home: React.FC = () => {
   const { changeChannel } = useContext(ChannelContext) as ChannelContextProps;
+  const { state } = useContext(UserContext) as UserContextProps;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!state.userData.token) {
+      router.push('/');
+    }
+  });
 
   return (
     <div

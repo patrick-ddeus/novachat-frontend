@@ -20,14 +20,16 @@ interface Inputs {
 }
 
 const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
-  const { state, setUserInfo } = useContext(UserContext) as UserContextProps;
+  const { state, setUserInfo, deleteUserInfo } = useContext(
+    UserContext
+  ) as UserContextProps;
   const [profile, setProfile] = useState({
     username: '',
     email: '',
     aboutMe: '',
   });
 
-  const { errors, handleSubmit, handleChange, data } = useForm<Inputs>({
+  const { errors, handleSubmit, handleChange } = useForm<Inputs>({
     initialValues: { ...profile },
     schema: EditProfileSchema,
     onSubmit: async (data) => {
@@ -39,7 +41,7 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
           params.userId,
           state.userData.token
         );
-        console.log(data)
+        console.log(data);
         setUserInfo(state.userData.token, data.username, +params.userId);
       } catch (error) {
         console.log(error);
@@ -133,8 +135,16 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
               });
             }}
           />
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col gap-4">
             <Button label="Save" />
+            <Button
+              isLight={true}
+              label="Log out"
+              onClick={() => {
+                deleteUserInfo();
+                router.push('/');
+              }}
+            />
           </div>
         </form>
       </section>
