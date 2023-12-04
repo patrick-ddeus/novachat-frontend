@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import TopMenu from '../components/TopMenu';
 import ChatBox from '../components/ChatBox';
@@ -13,14 +13,14 @@ import ChannelContext, {
 const inter = Inter({ subsets: ['latin'] });
 const Home: React.FC = () => {
   const { changeChannel } = useContext(ChannelContext) as ChannelContextProps;
-  
+
   return (
     <div
       className={`min-h-screen bg-[#000E08] ${inter.className} relative overflow-x-hidden`}
     >
       <TopMenu />
       <ul className="px-4 my-5 ">
-        <div className="flex gap-4 items-center overflow-x-scroll">
+        <div className="flex gap-4 items-center overflow-x-hidden">
           {[...Array(5)].map((_, index) => (
             <li
               key={index}
@@ -34,7 +34,9 @@ const Home: React.FC = () => {
                 height="54"
                 className="w-14 h-14 rounded-full bg-white object-cover p-[1px]"
               ></Image>
-              <p className="text-white text-sm truncate hover:text-clip w-14">Chatting 2aaaaa</p>
+              <p className="text-white text-sm truncate hover:text-clip w-14">
+                Chatting 2aaaaa
+              </p>
             </li>
           ))}
         </div>

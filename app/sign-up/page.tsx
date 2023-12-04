@@ -12,6 +12,7 @@ import LoadingIcon from '../components/LoadingIcon';
 import useSignUp from '../../hooks/api/useSignUp';
 
 import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 type Inputs = {
   username: string | null;
@@ -35,6 +36,7 @@ const SignUp: React.FC = () => {
     onSubmit: async (data) => {
       try {
         await signUp(data.username, data.email, data.password);
+        router.push('/home');
       } catch (err) {
         if (err instanceof AxiosError) alert(err.response?.data.message);
       }

@@ -8,7 +8,7 @@ import AuthInput from '../../components/AuthInput';
 import { EditProfileSchema } from '@/schemas/editProfileSchema';
 import Button from '../../components/Button';
 
-import guy from '@/public/images/guy.png';
+import guy from '@/public/images/guy2.svg';
 import ProfileApi from '@/service/api/profileApi';
 import UserContext, { UserContextProps } from '../../../contexts/UserContext';
 import { FaArrowLeftLong } from 'react-icons/fa6';
@@ -20,7 +20,7 @@ interface Inputs {
 }
 
 const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
-  const { state } = useContext(UserContext) as UserContextProps;
+  const { state, setUserInfo } = useContext(UserContext) as UserContextProps;
   const [profile, setProfile] = useState({
     username: '',
     email: '',
@@ -39,6 +39,8 @@ const Profile: React.FC<{ params: { userId: string } }> = ({ params }) => {
           params.userId,
           state.userData.token
         );
+        console.log(data)
+        setUserInfo(state.userData.token, data.username, +params.userId);
       } catch (error) {
         console.log(error);
       }

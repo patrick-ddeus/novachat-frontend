@@ -38,6 +38,7 @@ export function useForm<T>(options: Options<T>) {
             validationErrors[err.path[0]] = err.message;
           }
         });
+        
         setErrors(validationErrors);
       }
     }

@@ -3,6 +3,8 @@ import React, { useContext } from 'react';
 import { IoSearch } from 'react-icons/io5';
 import UserContext, { UserContextProps } from '../../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
+import Guy from '@/public/images/guy2.svg';
+import Image from 'next/image';
 
 const TopMenu: React.FC = () => {
   const context = useContext(UserContext) as UserContextProps;
@@ -16,10 +18,12 @@ const TopMenu: React.FC = () => {
         </li>
         <li className="text-lg font-medium">Home</li>
         <li>
-          <div
+          <Image
+            src={Guy}
+            alt="guy with blue background"
             className="rounded-full w-10 h-10 bg-blue-900"
             onClick={() => router.push(`/profile/${context.state.userData.id}`)}
-          ></div>
+          ></Image>
         </li>
       </ul>
     </section>

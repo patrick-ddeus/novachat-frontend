@@ -22,6 +22,7 @@ const socket = io('http://localhost:8082');
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<MessagesResponse[]>([]);
+  // State when user is typing
   const [userStatus, setUserStatus] = useState({
     user: '',
     message: '',
@@ -51,12 +52,12 @@ const ChatBox: React.FC = () => {
   }, [channel]);
 
   useEffect(() => {
-    const handleUserSendingStatus = (data: any) => {
+    const handleUserSendingStatus = (data: typeof userStatus) => {
       const user = state.userData.username;
       if (user !== data.user) setUserStatus(data);
     };
 
-    const handleMessages = (data: any) => {
+    const handleMessages = (data: MessagesResponse) => {
       setMessages((prev) => [...prev, data]);
     };
 
@@ -71,6 +72,7 @@ const ChatBox: React.FC = () => {
 
   const sendMessage = () => {
     const id = state.userData.id;
+
     socket.emit('messages', {
       authorId: id,
       Author: {
@@ -80,8 +82,14 @@ const ChatBox: React.FC = () => {
       channelId: channel,
       createdAt: Date.now(),
     });
+
     setMessageInput('');
-    socket.emit('userSendingStatus', { user: '', message: '' });
+
+    socket.emit('userSendingStatus', {
+      user: '',
+      message: '',
+      channelId: channel,
+    });
   };
 
   const handleChangeOnInputMessage = (

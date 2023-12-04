@@ -13,6 +13,7 @@ import { AxiosError } from 'axios';
 import useSignIn from '../../hooks/api/useSignIn';
 import UserContext from '../../contexts/UserContext';
 import LoadingIcon from '../components/LoadingIcon';
+import { toast } from 'react-toastify';
 
 interface Inputs {
   email: string | null;
@@ -22,6 +23,7 @@ interface Inputs {
 const Login: React.FC = () => {
   const { signIn, loading } = useSignIn();
   const context = useContext(UserContext);
+  const router = useRouter();
 
   const { errors, handleSubmit, handleChange } = useForm<Inputs>({
     initialValues: {
@@ -37,13 +39,15 @@ const Login: React.FC = () => {
           userData.username,
           userData.id
         );
+        toast.success('Successfully logged in!', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        router.push('/home');
       } catch (err) {
         if (err instanceof AxiosError) alert(err.response?.data.message);
       }
     },
   });
-
-  const router = useRouter();
 
   if (loading) {
     return (

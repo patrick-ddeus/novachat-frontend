@@ -1,9 +1,11 @@
+'use client';
 import Image from 'next/image';
 import guy from '../../../../public/images/guy.png';
 import { MessagesResponse } from '../../../../service/api/messagesApi';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import { useEffect, useRef, useState } from 'react';
 
 interface IMessageProps {
   userId: number | undefined;
@@ -11,8 +13,32 @@ interface IMessageProps {
 }
 
 const Message: React.FC<IMessageProps> = ({ userId, messages }) => {
+  const messagesContainerRef = useRef<HTMLUListElement | null>(null);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    const container = messagesContainerRef.current as HTMLUListElement;
+
+    const margin = 100;
+
+    const difference =
+      container.scrollHeight - (container.scrollTop + container.clientHeight);
+
+    const shouldScrollDown = isFirstRender || difference < margin;
+
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+
+      setIsFirstRender(false);
+    }
+  }, [messages, isFirstRender]);
+
   return (
-    <ul className="p-5 pb-16 sm:pb-24 max-h-[400px] overflow-auto overflow-x-hidden">
+    <ul
+      ref={messagesContainerRef}
+      className="p-5 pb-16 sm:pb-24 max-h-[400px] overflow-auto overflow-x-hidden"
+    >
       {messages.map((message) => (
         <li
           key={message.id}
@@ -33,7 +59,7 @@ const Message: React.FC<IMessageProps> = ({ userId, messages }) => {
               <p className="mt-1 font-medium">{message.Author.username}</p>
             )}
             <span
-              className={`text-[14px] p-3 ${
+              className={`text-[14px] whitespace-break-spaces break-words max-w-[190px] p-3 ${
                 message.authorId === userId ? 'bg-[#20A090]' : 'bg-[#F2F7FB]'
               } rounded-xl ${
                 message.authorId === userId
