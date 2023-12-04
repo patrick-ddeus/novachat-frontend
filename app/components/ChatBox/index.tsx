@@ -78,6 +78,8 @@ const ChatBox: React.FC = () => {
   const sendMessage = () => {
     const id = state.userData.id;
 
+    if(messageInput.length === 0) return
+
     socket.emit('messages', {
       authorId: id,
       Author: {
