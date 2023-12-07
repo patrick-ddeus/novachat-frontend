@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import AuthInput from '../components/AuthInput';
 import Button from '../components/Button';
 
@@ -12,7 +12,7 @@ import LoadingIcon from '../components/LoadingIcon';
 import useSignUp from '../../hooks/api/useSignUp';
 
 import { AxiosError } from 'axios';
-import { toast } from 'react-toastify';
+import UserContext, { UserContextProps } from '../../contexts/UserContext';
 
 type Inputs = {
   username: string | null;
@@ -23,6 +23,8 @@ type Inputs = {
 
 const SignUp: React.FC = () => {
   const { signUp, loading } = useSignUp();
+  const { setUserInfo } = useContext(UserContext) as UserContextProps;
+
   const router = useRouter();
 
   const { errors, handleSubmit, handleChange } = useForm<Inputs>({
@@ -35,7 +37,14 @@ const SignUp: React.FC = () => {
     schema: SignUpSchema,
     onSubmit: async (data) => {
       try {
-        await signUp(data.username, data.email, data.password);
+        const response = await signUp(data.username, data.email, data.password);
+        console.log(response.data);
+        setUserInfo(
+          response.data.access_token,
+          response.data.username,
+          response.data.id
+        );
+
         router.push('/home');
       } catch (err) {
         if (err instanceof AxiosError) alert(err.response?.data.message);

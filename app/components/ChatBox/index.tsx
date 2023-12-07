@@ -120,7 +120,7 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="h-[70vh] w-screen bg-white absolute bottom-0 left-0 rounded-t-3xl">
-      <Messages messages={messages} userId={userStorageValue.userData.id} />
+      <Messages channel={channel} messages={messages} userId={userStorageValue.userData.id} />
       <form
         action=""
         onSubmit={(e) => e.preventDefault()}
